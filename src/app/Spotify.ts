@@ -7,7 +7,7 @@ export let playSpotify = (cbInfo): void => {
     //let player = null;
 
     window.onSpotifyWebPlaybackSDKReady = () => {
-        const token = 'BQCUsWkduw7chCOlRUOLrLTjf1VedvkcsaZUB0KO5kjTJDEQx_ReoSMSI0ii7gxOmn1OKRaFc4m65jkchWf2N1cyuMSYL1wybz-AluC_1Aei4i04gCuMZVnOotwlWKAMCAkwBGNdYoxLg5sEXjiHvyoNTeLwvAzPCeemhQ';
+        const token = 'BQDAkExWHeRako1UPtNKiAJjo4cTGCudBKtp-BrNwys16FcTCeT8QLglKl2ORUeoL_OKeWVz3dClAK0eJwyoAdNcmhHNB-HJHM97ZBx4REY2hVK3PiXPBqo8fu6aqV7g0x0ecAYgT43-RlUtOMFV_BMBJi0Ok8_NEHvHvA';
 
         //@ts-ignore
         const player = new Spotify.Player({

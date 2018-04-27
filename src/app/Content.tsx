@@ -88,6 +88,8 @@ export default class Content extends React.Component<ContentProps, any> {
 
     playSong = (uri:string, songNumber:number) => {
         console.log("player is", this.props.player)
+        console.log("songnumber tried is", songNumber);
+        console.log("uri tried is", uri);
         this.setState({
             numberSelected: songNumber
         })
@@ -104,17 +106,19 @@ export default class Content extends React.Component<ContentProps, any> {
 
     updateSong = (instruction:number) => {
         console.log("updating song with instruction", instruction)
-        let songNumber;
         switch (instruction) {
             case 0: // do nothing
                 break; 
             case 1: // next song
-                songNumber = (this.state.numberSelected + 1) % this.uriList.length
+                let songNumber = (this.state.numberSelected + 1) % this.uriList.length
                 this.playSong( this.uriList[songNumber], songNumber)
                 break;
             case 2: // previous song
-                songNumber = (this.state.numberSelected - 1) % this.uriList.length
-                this.playSong( this.uriList[songNumber], songNumber)
+                let minSongNumber = (this.state.numberSelected - 1) % this.uriList.length
+                if (minSongNumber == -1) {
+                    minSongNumber = 7
+                }
+                this.playSong( this.uriList[minSongNumber], minSongNumber)
                 break;
             case 3: // pause/resume
                 console.log("pausing")

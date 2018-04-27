@@ -7,7 +7,7 @@ export let playSpotify = (cbInfo): void => {
     //let player = null;
 
     window.onSpotifyWebPlaybackSDKReady = () => {
-        const token = 'BQBP8MCeq0DP64i1GEFKGhxp250BtpqZqCeTWW0ElKwRANHwsbOLIPJcLN_R33LBt5O7Ff20njE0k4MisHPbGrp6nr070rQTW6kZZOQ3QTDt6RiYYJqVMqgo1cUxwMlNoAFCfc7PoiNYv4fei872b0Q895F6Wn76WhlvZQ';
+        const token = 'BQCUsWkduw7chCOlRUOLrLTjf1VedvkcsaZUB0KO5kjTJDEQx_ReoSMSI0ii7gxOmn1OKRaFc4m65jkchWf2N1cyuMSYL1wybz-AluC_1Aei4i04gCuMZVnOotwlWKAMCAkwBGNdYoxLg5sEXjiHvyoNTeLwvAzPCeemhQ';
 
         //@ts-ignore
         const player = new Spotify.Player({
@@ -43,8 +43,7 @@ export let playSpotify = (cbInfo): void => {
         player.addListener('player_state_changed', state => { console.log(state); });
         
         // Ready
-        
-
+        // start off with song 0 on load
         player.addListener('ready', ({ device_id }) => {
             console.log('Ready with Device ID', device_id);
             play({
@@ -54,6 +53,7 @@ export let playSpotify = (cbInfo): void => {
             });
             //connect(player)
         });
+        
         
         
         const play = (

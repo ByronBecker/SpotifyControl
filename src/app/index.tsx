@@ -4,7 +4,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import {playSpotify} from './Spotify';
-import {PeerClient} from './Peer';
 import Content from './Content';
 
 interface AppState {
@@ -34,11 +33,10 @@ class App extends React.Component <any, AppState>{
 
     render() {
         playSpotify(this.setPlayerAndToken.bind(this));
-        let peer = new PeerClient();
+
         return (
             <div>
-                Hello Spotify
-                <Content peer={peer} player={this.state.player} token={this.state.token}/>
+                <Content player={this.state.player} token={this.state.token}/>
             </div>
         )
     }

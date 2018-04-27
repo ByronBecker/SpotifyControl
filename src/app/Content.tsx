@@ -1,5 +1,7 @@
 
-import Peer = require('peerjs')
+//import Peer = require('peerjs')
+
+import {PeerClient} from './Peer';
 import * as React from 'react'
 
 interface SongProps {
@@ -29,7 +31,7 @@ class Song extends React.Component <SongProps, SongState>{
     }
 
     componentWillReceiveProps(newProps) {
-        if (newProps.numberSelected == this.state.songNumber) {
+        if (newProps.numberSelected == newProps.songNumber) {
             this.setState({
                 backgroundColor: "yellow"
             });
@@ -43,37 +45,31 @@ class Song extends React.Component <SongProps, SongState>{
 
     render() {
         return (
-            <div style={{backgroundColor: this.state.backgroundColor}}
+            <div style={{backgroundColor: this.state.backgroundColor, width: "fit-content"}}
                 onClick={() => this.props.handleClick(this.state.uri, this.state.songNumber)}>
                 {this.state.name}
             </div>
         )
     }
-
 }
 
-const SongLine = (props):JSX.Element => {
-    return (
-        <div style={{backgroundColor: props.backgroundColor}}>
-            {props.name}
-        </div>
-    )
-} 
-
 export interface ContentProps {
-    peer: Peer,
     player: any,
     token: string
 }
 
 
 export default class Content extends React.Component<ContentProps, any> {
+    public peerSenderId: string = null;
+    public peerClient: PeerClient = null;
     constructor(props) {
         super(props);
-
         this.state = {
-            numberSelected: -1,
+            numberSelected: 0,
+            dataReceived: null,
+            id: null,
         }
+        this.peerClient = new PeerClient(this.dataRelay.bind(this))
     }
 
     playSong = (uri:string, songNumber:number) => {
@@ -88,34 +84,67 @@ export default class Content extends React.Component<ContentProps, any> {
         });
     }
 
+    setSenderId = (e) => {
+        this.peerSenderId = e.target.value;
+    }
+
+    dataRelay = (key, data) => {
+        if (key == "data") {
+            console.log("peer received a message!");
+            console.log("spotify app received data=", data);
+            this.setState({
+                dataReceived: data
+            })
+        }
+        else if (key == "id") {
+            console.log("setting app peerID");
+            this.setState({
+                id: data
+            });
+
+        }
+    }
+
+    connectPeers = () => {
+        console.log("peer is ", this.peerClient.peer, "connecting to sender", this.peerSenderId);
+        this.peerClient.connectP2P(this.peerSenderId);
+    }
+
+
     render() {
         return (
             <div>
-                <Song name="Quiet Nights of Quiet Stars" uri="spotify:track:6MH0J3KUfEVWpz7XEpHOJW" 
-                    songNumber={0} numberSelected={this.state.numberSelected} handleClick={this.playSong}
-                />
-                <Song name="She Came in Through the Bathroom Window" uri="spotify:track:2jtUGFsqanQ82zqDlhiKIp"
-                    songNumber={1} numberSelected={this.state.numberSelected} handleClick={this.playSong}
-                />
-                <Song name="Treasure" uri="spotify:track:55h7vJchibLdUkxdlX3fK7"
-                    songNumber={2} numberSelected={this.state.numberSelected} handleClick={this.playSong}
-                />
-                <Song name="The Three Trumpeters" uri="spotify:track:4hwbmQjymEOZfHxyuPnVXB"
-                    songNumber={1} numberSelected={this.state.numberSelected} handleClick={this.playSong}
-                />
-                <Song name="Radio Silence" uri="spotify:track:5kWHEzWJ9f6btqiotA6Xhi"
-                    songNumber={1} numberSelected={this.state.numberSelected} handleClick={this.playSong}
-                />
-                <Song name="Creep" uri="spotify:track:6b2oQwSGFkzsMtQruIWm2p"
-                    songNumber={1} numberSelected={this.state.numberSelected} handleClick={this.playSong}
-                />
-                <Song name="Cheek to Cheek" uri="spotify:track:0UuRIovHyU6KeTzY4gS0L2"
-                    songNumber={1} numberSelected={this.state.numberSelected} handleClick={this.playSong}
-                />
-                <Song name="Light My Fire" uri="spotify:track:5uvosCdMlFdTXhoazkTI5R"
-                    songNumber={1} numberSelected={this.state.numberSelected} handleClick={this.playSong}
-                />
-                
+                <h4> Your PeerID is {this.state.id}</h4>
+                Enter Peer to Subscribe to <input type="text" onChange={this.setSenderId}/>
+                <input type="submit" onClick={this.connectPeers}/> <br/>
+                <div>
+                    <b> Song Title </b> <br/>
+                    <Song name="Quiet Nights of Quiet Stars" uri="spotify:track:6MH0J3KUfEVWpz7XEpHOJW" 
+                        songNumber={0} numberSelected={this.state.numberSelected} handleClick={this.playSong}
+                    />
+                    <Song name="She Came in Through the Bathroom Window" uri="spotify:track:2jtUGFsqanQ82zqDlhiKIp"
+                        songNumber={1} numberSelected={this.state.numberSelected} handleClick={this.playSong}
+                    />
+                    <Song name="Treasure" uri="spotify:track:55h7vJchibLdUkxdlX3fK7"
+                        songNumber={2} numberSelected={this.state.numberSelected} handleClick={this.playSong}
+                    />
+                    <Song name="The Three Trumpeters" uri="spotify:track:4hwbmQjymEOZfHxyuPnVXB"
+                        songNumber={3} numberSelected={this.state.numberSelected} handleClick={this.playSong}
+                    />
+                    <Song name="Radio Silence" uri="spotify:track:5kWHEzWJ9f6btqiotA6Xhi"
+                        songNumber={4} numberSelected={this.state.numberSelected} handleClick={this.playSong}
+                    />
+                    <Song name="Creep" uri="spotify:track:6b2oQwSGFkzsMtQruIWm2p"
+                        songNumber={5} numberSelected={this.state.numberSelected} handleClick={this.playSong}
+                    />
+                    <Song name="Cheek to Cheek" uri="spotify:track:0UuRIovHyU6KeTzY4gS0L2"
+                        songNumber={6} numberSelected={this.state.numberSelected} handleClick={this.playSong}
+                    />
+                    <Song name="Light My Fire" uri="spotify:track:5uvosCdMlFdTXhoazkTI5R"
+                        songNumber={7} numberSelected={this.state.numberSelected} handleClick={this.playSong}
+                    />
+                </div> 
+                <div> Most recent data Received was {this.state.dataReceived} </div>
             </div>
         )
     }
